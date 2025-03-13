@@ -18,6 +18,7 @@ public class ProductController
     @Autowired
     private ProductService productService;
 
+    //Local DB
     private List<Product> localDB=new ArrayList<>(
             Arrays.asList(
                     new Product( "Laptop", 75000.0),
