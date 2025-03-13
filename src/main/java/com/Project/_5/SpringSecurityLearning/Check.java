@@ -9,6 +9,8 @@ public class Check
     @GetMapping("/check")
     public String Greeting()
     {
-        return "Everything's working";
+        return "Everything's working." +
+                "Lets!! go";
+
     }
 }

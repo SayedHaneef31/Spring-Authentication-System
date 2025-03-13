@@ -2,9 +2,11 @@ package com.Project._5.SpringSecurityLearning.Controller;
 
 import com.Project._5.SpringSecurityLearning.Entity.Product;
 import com.Project._5.SpringSecurityLearning.Service.ProductService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -12,27 +14,35 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
-@RequestMapping(name = "/products")
+@RequestMapping("/products")
 public class ProductController
 {
     @Autowired
     private ProductService productService;
 
     //Local DB
-    private List<Product> localDB=new ArrayList<>(
-            Arrays.asList(
-                    new Product( "Laptop", 75000.0),
-                    new Product( "Smartphone", 25000.0),
-                    new Product( "Headphones", 3000.0),
-                    new Product( "Smartwatch", 5000.0)
-            )
-
-    );
+//    private List<Product> localDB=new ArrayList<>(
+//            Arrays.asList(
+//                    new Product( "Laptop", 75000.0),
+//                    new Product( "Smartphone", 25000.0),
+//                    new Product( "Headphones", 3000.0),
+//                    new Product( "Smartwatch", 5000.0)
+//            )
+//
+//    );
 
     @GetMapping("")
     public List<Product> getAllProducts()
     {
-        return localDB;
+        //System.out.println("inside getAllProducts() method");
+        return productService.listProducts();
+    }
+
+    @GetMapping("/csrf")             //this method will get me the csrf token for the already authenticated user
+                                     //This api will only hity when the user is authenticated.
+    public CsrfToken getCSRFToken(HttpServletRequest request)
+    {
+        return (CsrfToken) request.getAttribute("_csrf");
     }
 
     @PostMapping("")
