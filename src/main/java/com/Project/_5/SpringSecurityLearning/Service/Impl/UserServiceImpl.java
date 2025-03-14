@@ -3,6 +3,7 @@ package com.Project._5.SpringSecurityLearning.Service.Impl;
 import com.Project._5.SpringSecurityLearning.Entity.User;
 import com.Project._5.SpringSecurityLearning.Repository.UserRepo;
 import com.Project._5.SpringSecurityLearning.Service.UserService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,9 +11,11 @@ import java.util.List;
 public class UserServiceImpl implements UserService
 {
 
+    private final PasswordEncoder passwordEncoder;
     private final UserRepo userRepo;
 
-    public UserServiceImpl(UserRepo userRepo) {
+    public UserServiceImpl(PasswordEncoder passwordEncoder, UserRepo userRepo) {
+        this.passwordEncoder = passwordEncoder;
         this.userRepo = userRepo;
     }
 
@@ -23,6 +26,7 @@ public class UserServiceImpl implements UserService
 
     @Override
     public User createUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));   // Encode before saving the password
         return userRepo.save(user);
     }
 }

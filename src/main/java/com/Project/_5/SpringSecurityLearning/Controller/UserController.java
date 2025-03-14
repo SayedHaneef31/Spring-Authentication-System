@@ -4,6 +4,7 @@ import com.Project._5.SpringSecurityLearning.Entity.User;
 import com.Project._5.SpringSecurityLearning.Repository.UserRepo;
 import com.Project._5.SpringSecurityLearning.Service.UserService;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,16 +13,18 @@ import java.util.List;
 //@RequestMapping("/users")
 public class UserController {
 
+    private final PasswordEncoder passwordEncoder;
     private final UserService userService;
     private final UserRepo userRepo;
 
-    public UserController(UserService userService, UserRepo userRepo) {
+    public UserController(PasswordEncoder passwordEncoder, UserService userService, UserRepo userRepo) {
+        this.passwordEncoder = passwordEncoder;
         this.userService = userService;
         this.userRepo = userRepo;
     }
 
 
-    @GetMapping("users")
+    @GetMapping("/users")
     public List<User> getAllUsers() {return userService.listAllUsers();}
 
     @PostMapping("/register")
@@ -41,7 +44,13 @@ public class UserController {
         if (userRepo.existsByUsername(user.getUsername()))
         {
             User dbUser= userRepo.findByUsername(user.getUsername());
-            if(dbUser.getPassword().equals(user.getPassword()))
+//            String password=user.getPassword();         //No need to do all this
+//            String encodedPassword=passwordEncoder.encode(password);
+//            System.out.println("EncodedPassword="+encodedPassword);
+//            System.out.println("DbUserPassword="+dbUser.getPassword());
+            //We have this method in PasswordEncoder
+            //boolean matches(CharSequence rawPassword, String encodedPassword);
+            if(passwordEncoder.matches(user.getPassword(),dbUser.getPassword()))
             res="Login Success and password matches as well";
             else
             res="Login Success with username only";

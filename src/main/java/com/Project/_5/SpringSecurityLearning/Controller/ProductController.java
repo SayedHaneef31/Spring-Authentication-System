@@ -17,8 +17,13 @@ import java.util.List;
 @RequestMapping("/products")
 public class ProductController
 {
-    @Autowired
-    private ProductService productService;
+
+    private final ProductService productService;
+
+    public ProductController(ProductService productService) {
+        System.out.println("We are in the /products controller");
+        this.productService = productService;
+    }
 
     //Local DB
 //    private List<Product> localDB=new ArrayList<>(
@@ -31,10 +36,10 @@ public class ProductController
 //
 //    );
 
-    @GetMapping("")
+    @GetMapping()
     public List<Product> getAllProducts()
     {
-        //System.out.println("inside getAllProducts() method");
+        System.out.println("inside getAllProducts() method");
         return productService.listProducts();
     }
 
