@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @Component      //thereby telling spring that we will wnt to have the object of this class somewhere in the future
 public class CustomUserDetailsService implements UserDetailsService {

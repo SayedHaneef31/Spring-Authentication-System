@@ -39,7 +39,7 @@ public class ProductController
     @GetMapping()
     public List<Product> getAllProducts()
     {
-        System.out.println("inside getAllProducts() method");
+        //System.out.println("inside getAllProducts() method");
         return productService.listProducts();
     }
 
