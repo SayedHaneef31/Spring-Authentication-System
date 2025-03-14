@@ -2,10 +2,12 @@ package com.Project._5.SpringSecurityLearning.Service.Impl;
 
 import com.Project._5.SpringSecurityLearning.Entity.User;
 import com.Project._5.SpringSecurityLearning.Service.JwtService;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -49,6 +51,32 @@ public class JwtServiceImpl implements JwtService {
                 .compact(); //Generates the final compact JWT string.
 
 
+    }
+
+    @Override
+    public String ectractUserName(String jwtToken) {
+//        Claims claims=extractClaims(jwtToken);
+        return extractClaims(jwtToken).getSubject();
+    }
+
+    @Override
+    public boolean isTokenValid(String jwtToken, UserDetails userDetails) {
+        String username=ectractUserName(jwtToken);
+        if(isTokenExpired(jwtToken)) return false;
+        return (username.equals(userDetails.getUsername()));
+    }
+
+    private boolean isTokenExpired(String jwtToken) {
+        Date date=extractClaims(jwtToken).getExpiration();
+        return date.before((new Date()));
+    }
+
+    private Claims extractClaims(String jwtToken) {
+        return Jwts.parser()
+                .verifyWith(generateKey())
+                .build()
+                .parseSignedClaims(jwtToken)
+                .getPayload();
     }
 
 
